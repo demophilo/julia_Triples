@@ -1,0 +1,4 @@
+name = "Triples"
+uuid = "339df795-edc0-4e67-bf3a-db23729ee709"
+authors = ["Karl Linek <karl@linek.at>"]
+version = "0.1.0"
