@@ -27,13 +27,29 @@ function angle_by_cos_law(a, b, c)
     return _angle
 end
 
+function get_ext_trojan_triples(num::Int)
+    _triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
+    _ext_triples::Vector{NamedTuple{(:p, :q, :a, :b, :c), Tuple{Int, Int, Int, Int, Int}}} = []
+    for big_num::Int in 3:num
+        for small_num::Int in 1:floor((big_num-1)/2)
+            _triple = generate_trojan_triple(big_num, small_num)
+            if _triple ∉ _triples
+                push!(_triples, _triple.a, _triple.b, _triple.c)
+                push!(big_num, small_num, tripl.a, triple.b, triple.c)
+            end
+        end
+    end
+    sort!(_ext_triples, by = x -> (x.c, x.b))
+    return _ext_triples
+end
+
 function get_trojan_triples(num::Int)
     _triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
     for big_num::Int in 3:num
         for small_num::Int in 1:floor((big_num-1)/2)
             _triple = generate_trojan_triple(big_num, small_num)
             if _triple ∉ _triples
-                push!(_triples, _triple)
+                push!(_triples, (a=_triple.a, b=_triple.b, c=_triple.c))
             end
         end
     end
@@ -44,18 +60,23 @@ end
 
 
 
-function add_angles(triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}})
-    
+function add_angles(triples::Vector{<:NamedTuple})
     _ext_triples = []
     for item in triples
-        a,b,c = item
-        α = angle_by_cos_law(a, b, c)
-        β = angle_by_cos_law(b, a, c)
-        γ = angle_by_cos_law(c, a, b)
-        push!(_ext_triples, (a=a, b=b, c=c, α=α, β=β, γ=γ))
+        
+        α = angle_by_cos_law(item.a, item.b, item.c)
+        β = angle_by_cos_law(item.b, item.a, item.c)
+        γ = angle_by_cos_law(item.c, item.a, item.b)
+        
+        new_item = merge(item, (α=α, β=β, γ=γ))
+        
+        # Fügen Sie das erweiterte Named Tuple zum Ergebnis-Vector hinzu
+        push!(_ext_triples, new_item)
     end
     return _ext_triples
 end
+
+
 
 triples = get_trojan_triples(20)
 ext_triples = add_angles(triples)
