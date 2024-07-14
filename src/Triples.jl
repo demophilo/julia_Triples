@@ -87,8 +87,9 @@ end
 function get_trojan_triples_for_a_number(num::Int)
 	_big_num::Int = ceil(sqrt(4 * num / 3 + 1))
 	_triples = get_trojan_triples(_big_num)
+	_every_triples = get_every_trojan_triple(_triples)
 	_right_triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
-	for item in _triples
+	for item in _every_triples
 		for edge in item
 			if num % edge == 0
 				a = item.a * num / edge
