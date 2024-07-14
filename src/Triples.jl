@@ -107,5 +107,16 @@ function get_trojan_triples_for_a_number(num::Int)
 
 end
 
+function get_every_trojan_triple(triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}})
+	_every_triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
+	for item in triples
+		first_triple = (a = item.a, b = item.c, c = item.a + item.b)
+		second_triple = (a = item.b, b = item.c, c = item.a + item.b)
+		push!(_every_triples, first_triple)
+		push!(_every_triples, second_triple)
+		push!(_every_triples, item)
+	end
+	return _every_triples
+end
 triples = get_trojan_triples_for_a_number(111)
 println(triples)
