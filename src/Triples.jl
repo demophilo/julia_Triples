@@ -20,8 +20,6 @@ function generate_trojan_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :
     return (a=_triple[1], b=_triple[2], c=_triple[3])
 end
 
-
-
 function angle_by_cos_law(a, b, c)
     _angle = acosd((b^2 + c^2 - a^2) / (2 * b * c))
     return _angle
@@ -34,8 +32,8 @@ function get_ext_trojan_triples(num::Int)
         for small_num::Int in 1:floor((big_num-1)/2)
             _triple = generate_trojan_triple(big_num, small_num)
             if _triple ∉ _triples
-                push!(_triples, _triple.a, _triple.b, _triple.c)
-                push!(big_num, small_num, tripl.a, triple.b, triple.c)
+                push!(_triples, (a=_triple.a, b=_triple.b, c=_triple.c))
+                push!(_ext_triples, (p=big_num, q=small_num, a=_triple.a, b=_triple.b, c=_triple.c))
             end
         end
     end
@@ -70,7 +68,7 @@ function add_angles(triples::Vector{<:NamedTuple})
         
         new_item = merge(item, (α=α, β=β, γ=γ))
         
-        # Fügen Sie das erweiterte Named Tuple zum Ergebnis-Vector hinzu
+        
         push!(_ext_triples, new_item)
     end
     return _ext_triples
@@ -78,12 +76,12 @@ end
 
 
 
-triples = get_trojan_triples(20)
-ext_triples = add_angles(triples)
+ext_triples = get_ext_trojan_triples(20)
+ext_triples = add_angles(ext_triples)
 
 for item in ext_triples
-    a,b,c,α,β,γ = item      
-    println("$a  $b  $c  $α   $β   $γ")
+    p,q,a,b,c,α,β,γ = item      
+    println("$p  $q  $a  $b  $c  $α   $β   $γ")
 end
 
 
