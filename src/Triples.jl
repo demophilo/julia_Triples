@@ -74,7 +74,7 @@ function add_angles(triples::Vector{<:NamedTuple})
 end
 
 function analyze_c_frequencies(ext_triples, max_num)
-	c_values = [item.c for item in ext_triples if item.c < max_num^2*3/4+1]
+	c_values = [item.c for item in ext_triples if item.c < max_num^2 * 3 / 4 + 1]
 	c_frequencies = countmap(c_values)
 	frequency_counts = Dict()
 	for freq in values(c_frequencies)
@@ -84,15 +84,28 @@ function analyze_c_frequencies(ext_triples, max_num)
 	return frequency_counts
 end
 
-max_num = 1500
+function get_trojan_triples_for_a_number(num::Int)
+	_big_num::Int = ceil(sqrt(4 * num / 3 + 1))
+	_triples = get_trojan_triples(_big_num)
+	_right_triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
+	for item in _triples
+		for edge in item
+			if num % edge == 0
+				a = item.a * num / edge
+				b = item.b * num / edge
+				c = item.c * num / edge
+				_triple = (a = a, b = b, c = c)
+				if _triple ∉ _right_triples
+					push!(_right_triples, _triple)
+				end
 
-ext_triples = get_trojan_triples(max_num)
-#ext_triples = add_angles(ext_triples)
+			end
+		end
 
-triples_dict = analyze_c_frequencies(ext_triples, max_num)
+	end
+	return _right_triples
 
-for (key, value) in triples_dict
-	println("$key: $value")
 end
 
-#end # module Triples
+triples = get_trojan_triples_for_a_number(111)
+println(triples)
