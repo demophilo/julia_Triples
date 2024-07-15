@@ -1,4 +1,4 @@
-#module Triples
+module Triples
 
 export generate_triples
 
@@ -121,3 +121,4 @@ function get_every_trojan_triple(triples::Vector{NamedTuple{(:a, :b, :c), Tuple{
 end
 triples = get_trojan_triples_for_a_number(111)
 println(triples)
+end # module
