@@ -1,6 +1,6 @@
 module Triples
 
-export generate_triples
+export generate_pyt_triple
 
 using StatsBase # Für countmap
 
@@ -85,39 +85,43 @@ function analyze_c_frequencies(ext_triples, max_num)
 end
 
 function get_trojan_triples_for_a_number(num::Int)
-	_big_num::Int = ceil(sqrt(4 * num / 3 + 1))
-	_triples = get_trojan_triples(_big_num)
-	_every_triples = get_every_trojan_triple(_triples)
-	_right_triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
-	for item in _every_triples
+	big_num::Int = ceil(sqrt(4 * num / 3 + 1))
+	triples = get_trojan_triples(big_num)
+	every_triples = expand_trojan_triple_vector(triples)
+	right_triple_set::Set{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
+	for item in every_triples
 		for edge in item
 			if num % edge == 0
 				a = item.a * num / edge
 				b = item.b * num / edge
 				c = item.c * num / edge
 				_triple = (a = a, b = b, c = c)
-				if _triple ∉ _right_triples
-					push!(_right_triples, _triple)
-				end
-
+				push!(right_triple_set, _triple)
 			end
 		end
 
 	end
-	return _right_triples
-
+	return right_triple_set
 end
 
-function get_every_trojan_triple(triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}})
-	_every_triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
+"""
+	get_every_trojan_triple(triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}})
+
+Input: vector of named trojan triples with one angle of 120°
+Output: vector of named trojan triples with all possible angles and the same hypothenuse
+"""
+function expand_trojan_triple_vector(triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}})
+	every_triple_set::Set{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
 	for item in triples
 		first_triple = (a = item.a, b = item.c, c = item.a + item.b)
 		second_triple = (a = item.b, b = item.c, c = item.a + item.b)
-		push!(_every_triples, first_triple)
-		push!(_every_triples, second_triple)
-		push!(_every_triples, item)
+		push!(every_triple_set, first_triple)
+		push!(every_triple_set, second_triple)
+		push!(every_triple_set, item)
 	end
-	return _every_triples
+	every_triple_vector = Vector(every_triple_set)
+	sort!(every_triple_vector, by = x -> (x.c, x.b))
+	return every_triple_vector
 end
 triples = get_trojan_triples_for_a_number(111)
 println(triples)
