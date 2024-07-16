@@ -5,7 +5,7 @@ export generate_pyt_triple
 using StatsBase # Für countmap
 
 """
-    generate_pyt_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
+	generate_pyt_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
 
 generates a named pythagorean triple
 Input: two intergers
@@ -19,10 +19,10 @@ function generate_pyt_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, 
 	return (a = triple[1], b = triple[2], c = triple[3])
 end
 
-end
+
 
 """
-    generate_trojan_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
+	generate_trojan_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
 
 generates a trojan triple with one angle of 120°
 Input: two intergers
@@ -172,4 +172,5 @@ function expand_trojan_triple_vector(triples::Vector{NamedTuple{(:a, :b, :c), Tu
 end
 triples = get_trojan_triples_for_a_number(111)
 println(triples)
+
 end # module
