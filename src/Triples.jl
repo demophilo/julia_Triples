@@ -84,24 +84,32 @@ function analyze_c_frequencies(ext_triples, max_num)
 	return frequency_counts
 end
 
-function get_trojan_triples_for_a_number(num::Int)
+"""
+    get_trojan_triples_for_a_number(num::Int)::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}}
+
+Input: number
+Output: vector of all possible named trojan triples, which have an edge of the size of the input number
+"""
+function get_trojan_triples_for_a_number(num::Int)::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}}
 	big_num::Int = ceil(sqrt(4 * num / 3 + 1))
-	triples = get_trojan_triples(big_num)
-	every_triples = expand_trojan_triple_vector(triples)
+	triples_vector = get_trojan_triples(big_num)
+	every_triple_vector = expand_trojan_triple_vector(triples_vector)
 	right_triple_set::Set{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
-	for item in every_triples
+	for item in every_triple_vector
 		for edge in item
 			if num % edge == 0
 				a = item.a * num / edge
 				b = item.b * num / edge
 				c = item.c * num / edge
-				_triple = (a = a, b = b, c = c)
-				push!(right_triple_set, _triple)
+				triple = (a = a, b = b, c = c)
+				push!(right_triple_set, triple)
 			end
 		end
 
 	end
-	return right_triple_set
+	right_triple_vector::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = Vector(every_triple_set)
+	sort!(right_triple_vector, by = x -> (x.c, x.b))
+	return right_triple_vector
 end
 
 """
