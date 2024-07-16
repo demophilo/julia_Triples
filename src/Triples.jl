@@ -73,6 +73,13 @@ function add_angles(triples::Vector{<:NamedTuple})
 	return _ext_triples
 end
 
+"""
+    analyze_c_frequencies(ext_triples, max_num)
+
+analyzes the frequency of multiple c values of the triples up to a given number
+input: vector of triples, number
+Output: dictionary with the key of the frequency and the value of frequency the same number of c values
+"""
 function analyze_c_frequencies(ext_triples, max_num)
 	c_values = [item.c for item in ext_triples if item.c < max_num^2 * 3 / 4 + 1]
 	c_frequencies = countmap(c_values)
