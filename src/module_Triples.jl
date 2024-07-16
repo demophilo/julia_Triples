@@ -68,14 +68,14 @@ Output: Vector of named tuples with the trojan triples up to the given number
 function generate_trojan_triple_vector(num::Int)
 	triple_set = Set{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}}()
 	for big_num in 3:num
-		for small_num::Int in 1:(big_num - 1) ÷ 2
+		for small_num::Int in 1:(big_num-1)÷2
 			trip = generate_trojan_triple_120(big_num, small_num)
 			push!(triple_set, (a = trip.a, b = trip.b, c = trip.c))
 		end
 
 	end
-	triple_vector = Vector(triple_set)
-	println(triple_vector)
+	triple_vector = collect(triple_set)
+
 	sort!(triple_vector, by = x -> (x.c, x.b))
 	return triple_vector
 end
