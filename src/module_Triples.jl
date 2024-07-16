@@ -1,6 +1,6 @@
 module Triples
 
-export generate_pyt_triple, generate_trojan_triple_120
+export generate_pyt_triple, generate_trojan_triple_120, calc_angle_by_cos_law
 
 """
 	generate_pyt_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
@@ -45,7 +45,16 @@ function generate_trojan_triple_120(big_num::Int, small_num::Int)::NamedTuple{(:
 	return (a = triple[1], b = triple[2], c = triple[3])
 end
 
+"""
+	calc_angle_by_cos_law(a, b, c)
 
+input: 3 edges of a triangle
+Output: angle opposite to the first edge in degrees
+"""
+function calc_angle_by_cos_law(a, b, c)
+	angle::Real = acosd((b^2 + c^2 - a^2) / (2 * b * c))
+	return angle
+end
 
 
 
