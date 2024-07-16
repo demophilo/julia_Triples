@@ -57,6 +57,12 @@ function get_trojan_triples(num::Int)
 	return _triples
 end
 
+"""
+    add_angles(triples::Vector{<:NamedTuple})
+
+Input: vector of named tuples containing a,b,c
+Output: vector of named tuple with the angles α, β, γ
+"""
 function add_angles(triples::Vector{<:NamedTuple})
 	_ext_triples = []
 	for item in triples
