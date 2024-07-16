@@ -13,13 +13,20 @@ function generate_pyt_triple(big_num::Int, small_num::Int)
 
 end
 
-function generate_trojan_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
-	_a::Int = big_num^2 + small_num^2 - big_num * small_num
-	_b::Int = abs(big_num^2 - 2 * big_num * small_num)
-	_c::Int = abs(small_num^2 - 2 * big_num * small_num)
+"""
+    generate_trojan_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
 
-	_triple = sort([_a, _b, _c])
-	return (a = _triple[1], b = _triple[2], c = _triple[3])
+generates a trojan triple with one angle of 120°
+Input: two intergers
+Output: sorted named trojan triple
+"""
+function generate_trojan_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
+	a::Int = big_num^2 + small_num^2 - big_num * small_num
+	b::Int = abs(big_num^2 - 2 * big_num * small_num)
+	c::Int = abs(small_num^2 - 2 * big_num * small_num)
+
+	triple = sort([a, b, c])
+	return (a = triple[1], b = triple[2], c = triple[3])
 end
 
 """
