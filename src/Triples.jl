@@ -22,9 +22,15 @@ function generate_trojan_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :
 	return (a = _triple[1], b = _triple[2], c = _triple[3])
 end
 
-function angle_by_cos_law(a, b, c)
-	_angle = acosd((b^2 + c^2 - a^2) / (2 * b * c))
-	return _angle
+"""
+	calc_angle_by_cos_law(a, b, c)
+
+input: 3 edges of a triangle
+Output: angle opposite to the first edge in degrees
+"""
+function calc_angle_by_cos_law(a, b, c)
+	angle::Real = acosd((b^2 + c^2 - a^2) / (2 * b * c))
+	return angle
 end
 
 function get_ext_trojan_triples(num::Int)
@@ -44,7 +50,7 @@ function get_ext_trojan_triples(num::Int)
 end
 
 """
-    generate_trojan_triple_vector(num::Int)
+	generate_trojan_triple_vector(num::Int)
 Input: number
 Output: Vector of named tuples with the trojan triples up to the given number
 """
@@ -63,7 +69,7 @@ function generate_trojan_triple_vector(num::Int)
 end
 
 """
-    add_angles(triples::Vector{<:NamedTuple})
+	add_angles(triples::Vector{<:NamedTuple})
 
 Input: vector of named tuples containing a,b,c
 Output: vector of named tuple with the angles α, β, γ
@@ -72,9 +78,9 @@ function add_angles(triples::Vector{<:NamedTuple})
 	_ext_triples = []
 	for item in triples
 
-		α = angle_by_cos_law(item.a, item.b, item.c)
-		β = angle_by_cos_law(item.b, item.a, item.c)
-		γ = angle_by_cos_law(item.c, item.a, item.b)
+		α = calc_angle_by_cos_law(item.a, item.b, item.c)
+		β = calc_angle_by_cos_law(item.b, item.a, item.c)
+		γ = calc_angle_by_cos_law(item.c, item.a, item.b)
 
 		new_item = merge(item, (α = α, β = β, γ = γ))
 
@@ -85,7 +91,7 @@ function add_angles(triples::Vector{<:NamedTuple})
 end
 
 """
-    analyze_c_frequencies(ext_triples, max_num)
+	analyze_c_frequencies(ext_triples, max_num)
 
 analyzes the frequency of multiple c values of the triples up to a given number
 input: vector of triples, number
@@ -103,7 +109,7 @@ function analyze_c_frequencies(ext_triples, max_num)
 end
 
 """
-    get_trojan_triples_for_a_number(num::Int)::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}}
+	get_trojan_triples_for_a_number(num::Int)::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}}
 
 Input: number
 Output: vector of all possible named trojan triples, which have an edge of the size of the input number
