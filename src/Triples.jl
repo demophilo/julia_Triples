@@ -5,7 +5,7 @@ export generate_pyt_triple
 using StatsBase # Für countmap
 
 """
-	generate_pyt_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
+    generate_pyt_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
 
 generates a named pythagorean triple
 Input: two intergers
@@ -22,7 +22,7 @@ end
 
 
 """
-	generate_trojan_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
+    generate_trojan_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
 
 generates a trojan triple with one angle of 120°
 Input: two intergers
@@ -48,20 +48,26 @@ function calc_angle_by_cos_law(a, b, c)
 	return angle
 end
 
+"""
+    get_ext_trojan_triples(num::Int)
+
+Input: number
+Output: Vector of named tuples with the trojan triples up to the given number extended with the numbers they where generated from
+"""
 function get_ext_trojan_triples(num::Int)
-	_triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
-	_ext_triples::Vector{NamedTuple{(:p, :q, :a, :b, :c), Tuple{Int, Int, Int, Int, Int}}} = []
+	triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
+	ext_triples::Vector{NamedTuple{(:p, :q, :a, :b, :c), Tuple{Int, Int, Int, Int, Int}}} = []
 	for big_num::Int in 3:num
 		for small_num::Int in 1:floor((big_num - 1) / 2)
-			_triple = generate_trojan_triple(big_num, small_num)
-			if _triple ∉ _triples
-				push!(_triples, (a = _triple.a, b = _triple.b, c = _triple.c))
-				push!(_ext_triples, (p = big_num, q = small_num, a = _triple.a, b = _triple.b, c = _triple.c))
+			triple = generate_trojan_triple(big_num, small_num)
+			if triple ∉ triples
+				push!(triples, (a = triple.a, b = triple.b, c = triple.c))
+				push!(ext_triples, (p = big_num, q = small_num, a = triple.a, b = triple.b, c = triple.c))
 			end
 		end
 	end
-	sort!(_ext_triples, by = x -> (x.c, x.b))
-	return _ext_triples
+	sort!(ext_triples, by = x -> (x.c, x.b))
+	return ext_triples
 end
 
 """
