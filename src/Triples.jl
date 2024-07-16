@@ -43,18 +43,23 @@ function get_ext_trojan_triples(num::Int)
 	return _ext_triples
 end
 
-function get_trojan_triples(num::Int)
-	_triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
+"""
+    generate_trojan_triple_vector(num::Int)
+Input: number
+Output: Vector of named tuples with the trojan triples up to the given number
+"""
+function generate_trojan_triple_vector(num::Int)
+	triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
 	for big_num::Int in 3:num
 		for small_num::Int in 1:floor((big_num - 1) / 2)
-			_triple = generate_trojan_triple(big_num, small_num)
-			if _triple ∉ _triples
-				push!(_triples, (a = _triple.a, b = _triple.b, c = _triple.c))
+			triple = generate_trojan_triple(big_num, small_num)
+			if triple ∉ triples
+				push!(triples, (a = triple.a, b = triple.b, c = triple.c))
 			end
 		end
 	end
-	sort!(_triples, by = x -> (x.c, x.b))
-	return _triples
+	sort!(triples, by = x -> (x.c, x.b))
+	return triples
 end
 
 """
@@ -105,7 +110,7 @@ Output: vector of all possible named trojan triples, which have an edge of the s
 """
 function get_trojan_triples_for_a_number(num::Int)::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}}
 	big_num::Int = ceil(sqrt(4 * num / 3 + 1))
-	triples_vector = get_trojan_triples(big_num)
+	triples_vector = generate_trojan_triple_vector(big_num)
 	every_triple_vector = expand_trojan_triple_vector(triples_vector)
 	right_triple_set::Set{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
 	for item in every_triple_vector
