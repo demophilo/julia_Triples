@@ -1,6 +1,10 @@
-module Triples
+module Trojan
 
-export generate_pyt_triple, generate_trojan_triple_120, calc_angle_by_cos_law
+export generate_pyt_triple,
+	generate_trojan_triple_120,
+	calc_angle_by_cos_law,
+	generate_trojan_triple_vector
+
 
 """
 	generate_pyt_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
@@ -41,8 +45,8 @@ function generate_trojan_triple_120(big_num::Int, small_num::Int)::NamedTuple{(:
 		b ÷= gcd_abc
 		c ÷= gcd_abc
 	end
-	triple = sort([a, b, c])
-	return (a = triple[1], b = triple[2], c = triple[3])
+	triple_new = sort([a, b, c])
+	return (a = triple_new[1], b = triple_new[2], c = triple_new[3])
 end
 
 """
@@ -56,7 +60,49 @@ function calc_angle_by_cos_law(a, b, c)
 	return angle
 end
 
+"""
+	generate_trojan_triple_vector(num::Int)
+Input: number
+Output: Vector of named tuples with the trojan triples up to the given number
+"""
+function generate_trojan_triple_vector(num::Int)
+	triple_set = Set{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}}()
+	for big_num in 3:num
+		for small_num::Int in 1:(big_num - 1) ÷ 2
+			trip = generate_trojan_triple_120(big_num, small_num)
+			push!(triple_set, (a = trip.a, b = trip.b, c = trip.c))
+		end
+
+	end
+	triple_vector = Vector(triple_set)
+	println(triple_vector)
+	sort!(triple_vector, by = x -> (x.c, x.b))
+	return triple_vector
+end
+
+"""
+	get_ext_trojan_triples(num::Int)
+
+Input: number
+Output: Vector of named tuples with the trojan triples up to the given number extended with the numbers they where generated from
+"""
+function get_ext_trojan_triples(num::Int)
+	triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
+	ext_triples::Vector{NamedTuple{(:p, :q, :a, :b, :c), Tuple{Int, Int, Int, Int, Int}}} = []
+	for big_num::Int in 3:num
+		for small_num::Int in 1:floor((big_num - 1) / 2)
+			triple = generate_trojan_triple_120(big_num, small_num)
+			if triple ∉ triples
+				push!(triples, (a = triple.a, b = triple.b, c = triple.c))
+				push!(ext_triples, (p = big_num, q = small_num, a = triple.a, b = triple.b, c = triple.c))
+			end
+		end
+	end
+	sort!(ext_triples, by = x -> (x.c, x.b))
+	return ext_triples
+end
 
 
 
-end # module Triples
+
+end # module Trojan
