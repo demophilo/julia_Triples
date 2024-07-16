@@ -1,120 +1,24 @@
-module Triples
+include("module_Triples.jl")
+import .Trojan as T
 
-export generate_pyt_triple
-
-using StatsBase # Für countmap
-
+#using StatsBase # Für countmap
+triple = T.get_ext_trojan_triple_vector(6)
+triple = T.add_angles_to_triple_vector(triple)
+println(triple)
+println(typeof(triple))
+#=
 """
-    generate_pyt_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
-
-generates a named pythagorean triple
-Input: two intergers
-Output: sorted named pythagorean triple
-"""
-function generate_pyt_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
-	a::Int = big_num^2 - small_num^2
-	b::Int = big_num^2 + small_num^2
-	c::Int = 2 * big_num * small_num
-	triple = sort([a, b, c])
-	return (a = triple[1], b = triple[2], c = triple[3])
-end
+	merge(a::NamedTuple, b::NamedTuple)
 
 
 
-"""
-    generate_trojan_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
-
-generates a trojan triple with one angle of 120°
-Input: two intergers
-Output: sorted named trojan triple
-"""
-function generate_trojan_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
-	a::Int = big_num^2 + small_num^2 - big_num * small_num
-	b::Int = abs(big_num^2 - 2 * big_num * small_num)
-	c::Int = abs(small_num^2 - 2 * big_num * small_num)
-	gcd_abc = foldl(gcd, [a, b, c])
-	if gcd_abc > 1
-		a ÷= gcd_abc
-		b ÷= gcd_abc
-		c ÷= gcd_abc
-	end
-	triple = sort([a, b, c])
-	return (a = triple[1], b = triple[2], c = triple[3])
-end
-
-"""
-	calc_angle_by_cos_law(a, b, c)
-
-input: 3 edges of a triangle
-Output: angle opposite to the first edge in degrees
-"""
-function calc_angle_by_cos_law(a, b, c)
-	angle::Real = acosd((b^2 + c^2 - a^2) / (2 * b * c))
-	return angle
-end
-
-"""
-    get_ext_trojan_triples(num::Int)
-
-Input: number
-Output: Vector of named tuples with the trojan triples up to the given number extended with the numbers they where generated from
-"""
-function get_ext_trojan_triples(num::Int)
-	triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
-	ext_triples::Vector{NamedTuple{(:p, :q, :a, :b, :c), Tuple{Int, Int, Int, Int, Int}}} = []
-	for big_num::Int in 3:num
-		for small_num::Int in 1:floor((big_num - 1) / 2)
-			triple = generate_trojan_triple(big_num, small_num)
-			if triple ∉ triples
-				push!(triples, (a = triple.a, b = triple.b, c = triple.c))
-				push!(ext_triples, (p = big_num, q = small_num, a = triple.a, b = triple.b, c = triple.c))
-			end
-		end
-	end
-	sort!(ext_triples, by = x -> (x.c, x.b))
-	return ext_triples
-end
-
-"""
-	generate_trojan_triple_vector(num::Int)
-Input: number
-Output: Vector of named tuples with the trojan triples up to the given number
-"""
-function generate_trojan_triple_vector(num::Int)
-	triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
-	for big_num::Int in 3:num
-		for small_num::Int in 1:floor((big_num - 1) / 2)
-			triple = generate_trojan_triple(big_num, small_num)
-			if triple ∉ triples
-				push!(triples, (a = triple.a, b = triple.b, c = triple.c))
-			end
-		end
-	end
-	sort!(triples, by = x -> (x.c, x.b))
-	return triples
-end
-
-"""
-	add_angles(triples::Vector{<:NamedTuple})
-
-Input: vector of named tuples containing a,b,c
-Output: vector of named tuple with the angles α, β, γ
-"""
-function add_angles(triples::Vector{<:NamedTuple})
-	_ext_triples = []
-	for item in triples
-
-		α = calc_angle_by_cos_law(item.a, item.b, item.c)
-		β = calc_angle_by_cos_law(item.b, item.a, item.c)
-		γ = calc_angle_by_cos_law(item.c, item.a, item.b)
-
-		new_item = merge(item, (α = α, β = β, γ = γ))
 
 
-		push!(_ext_triples, new_item)
-	end
-	return _ext_triples
-end
+
+
+
+
+
 
 """
 	analyze_c_frequencies(ext_triples, max_num)
@@ -142,9 +46,9 @@ Output: vector of all possible named trojan triples, which have an edge of the s
 """
 function get_trojan_triples_for_a_number(num::Int)::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}}
 	big_num::Int = ceil(sqrt(4 * num / 3 + 1))
-	triples_vector = generate_trojan_triple_vector(big_num)
-	every_triple_vector = expand_trojan_triple_vector(triples_vector)
-	right_triple_set::Set{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
+	triple_vector = generate_trojan_triple_vector(big_num)
+	every_triple_vector = expand_trojan_triple_vector(triple_vector)
+	right_triple_set::Set{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = Set[]
 	for item in every_triple_vector
 		for edge in item
 			if num % edge == 0
@@ -184,4 +88,4 @@ end
 triples = get_trojan_triples_for_a_number(111)
 println(triples)
 
-end # module
+=#
