@@ -4,12 +4,20 @@ export generate_pyt_triple
 
 using StatsBase # Für countmap
 
-function generate_pyt_triple(big_num::Int, small_num::Int)
-	_a::Int = big_num^2 - small_num^2
-	_b::Int = big_num^2 + small_num^2
-	_c::Int = 2 * big_num * small_num
-	_triple = sort([_a, _b, _c])
-	return _triple
+"""
+    generate_pyt_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
+
+generates a named pythagorean triple
+Input: two intergers
+Output: sorted named pythagorean triple
+"""
+function generate_pyt_triple(big_num::Int, small_num::Int)::NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}
+	a::Int = big_num^2 - small_num^2
+	b::Int = big_num^2 + small_num^2
+	c::Int = 2 * big_num * small_num
+	triple = sort([a, b, c])
+	return (a = triple[1], b = triple[2], c = triple[3])
+end
 
 end
 
