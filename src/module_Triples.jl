@@ -3,7 +3,9 @@ module Trojan
 export generate_pyt_triple,
 	generate_trojan_triple_120,
 	calc_angle_by_cos_law,
-	generate_trojan_triple_vector
+	generate_trojan_triple_vector,
+	get_ext_trojan_triple_vector,
+	add_angles_to_triple_vector
 
 
 """
@@ -86,7 +88,7 @@ end
 Input: number
 Output: Vector of named tuples with the trojan triples up to the given number extended with the numbers they where generated from
 """
-function get_ext_trojan_triples(num::Int)
+function get_ext_trojan_triple_vector(num::Int)
 	triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}} = []
 	ext_triples::Vector{NamedTuple{(:p, :q, :a, :b, :c), Tuple{Int, Int, Int, Int, Int}}} = []
 	for big_num::Int in 3:num
@@ -102,6 +104,28 @@ function get_ext_trojan_triples(num::Int)
 	return ext_triples
 end
 
+
+"""
+	add_angles(triples::Vector{<:NamedTuple})
+
+Input: vector of named tuples containing a,b,c
+Output: vector of named tuple with the angles α, β, γ
+"""
+function add_angles_to_triple_vector(triples::Vector{<:NamedTuple})
+	ext_triples =  []
+	for item in triples
+
+		α = calc_angle_by_cos_law(item.a, item.b, item.c)
+		β = calc_angle_by_cos_law(item.b, item.a, item.c)
+		γ = calc_angle_by_cos_law(item.c, item.a, item.b)
+
+		new_item = (; item..., α = α, β = β, γ = γ)
+
+
+		push!(ext_triples, new_item)
+	end
+	return ext_triples
+end
 
 
 
