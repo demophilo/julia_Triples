@@ -5,7 +5,10 @@ export generate_pyt_triple,
 	calc_angle_by_cos_law,
 	generate_trojan_triple_vector,
 	get_ext_trojan_triple_vector,
-	add_angles_to_triple_vector
+	add_angles_to_triple_vector,
+	get_trojan_triples_for_a_number,
+	expand_trojan_triple_vector
+
 
 
 """
@@ -112,7 +115,7 @@ Input: vector of named tuples containing a,b,c
 Output: vector of named tuple with the angles α, β, γ
 """
 function add_angles_to_triple_vector(triples::Vector{<:NamedTuple})
-	ext_triples =  []
+	ext_triples = []
 	for item in triples
 
 		α = calc_angle_by_cos_law(item.a, item.b, item.c)
@@ -127,6 +130,52 @@ function add_angles_to_triple_vector(triples::Vector{<:NamedTuple})
 	return ext_triples
 end
 
+"""
+	get_trojan_triples_for_a_number(num::Int)::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}}
 
+Input: number
+Output: vector of all possible named trojan triples, which have an edge of the size of the input number
+"""
+function get_trojan_triples_for_a_number(num::Int)
+	big_num::Int = ceil(sqrt(4 * num / 3 + 1))
+	triple_vector = generate_trojan_triple_vector(big_num)
+	every_triple_vector = expand_trojan_triple_vector(triple_vector)
+	right_triple_set = Set()
+	for item in every_triple_vector
+		for edge in item
+			if num % edge == 0
+				a = item.a * num / edge
+				b = item.b * num / edge
+				c = item.c * num / edge
+				triple = (a = a, b = b, c = c)
+				push!(right_triple_set, triple)
+			end
+		end
+
+	end
+	right_triple_vector = collect(right_triple_set)
+	sort!(right_triple_vector, by = x -> (x.c, x.b))
+	return right_triple_vector
+end
+
+"""
+	get_every_trojan_triple(triples::Vector{NamedTuple{(:a, :b, :c), Tuple{Int, Int, Int}}})
+
+Input: vector of named trojan triples with one angle of 120°
+Output: vector of named trojan triples with all possible angles and the same hypothenuse
+"""
+function expand_trojan_triple_vector(triples)
+	every_triple_set = Set()
+	for item in triples
+		first_triple = (a = item.a, b = item.c, c = item.a + item.b)
+		second_triple = (a = item.b, b = item.c, c = item.a + item.b)
+		push!(every_triple_set, first_triple)
+		push!(every_triple_set, second_triple)
+		push!(every_triple_set, item)
+	end
+	every_triple_vector = collect(every_triple_set)
+	sort!(every_triple_vector, by = x -> (x.c, x.b))
+	return every_triple_vector
+end
 
 end # module Trojan
