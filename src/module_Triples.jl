@@ -1,4 +1,5 @@
 module Trojan
+using StatsBase # Für countmap
 
 export generate_pyt_triple,
 	generate_trojan_triple_120,
@@ -7,7 +8,8 @@ export generate_pyt_triple,
 	get_ext_trojan_triple_vector,
 	add_angles_to_triple_vector,
 	get_trojan_triples_for_a_number,
-	expand_trojan_triple_vector
+	expand_trojan_triple_vector,
+	analyze_c_frequencies
 
 
 
@@ -176,6 +178,25 @@ function expand_trojan_triple_vector(triples)
 	every_triple_vector = collect(every_triple_set)
 	sort!(every_triple_vector, by = x -> (x.c, x.b))
 	return every_triple_vector
+end
+
+
+"""
+	analyze_c_frequencies(ext_triples, max_num)
+
+analyzes the frequency of multiple c values of the triples up to a given number
+input: vector of triples, number
+Output: dictionary with the key of the frequency and the value of frequency the same number of c values
+"""
+function analyze_c_frequencies(ext_triples, max_num)
+	c_values = [item.c for item in ext_triples if item.c < max_num^2 * 3 ÷ 4 + 1]
+	c_frequencies = countmap(c_values)
+	frequency_counts = Dict()
+	for freq in values(c_frequencies)
+		frequency_counts[freq] = get(frequency_counts, freq, 0) + 1
+	end
+
+	return frequency_counts
 end
 
 end # module Trojan
