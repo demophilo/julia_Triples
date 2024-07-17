@@ -45,3 +45,11 @@ end
 		(p = 6, q = 1, a = 11, b = 24, c = 31, α = 17.89655112925416, β = 42.10344887074584, γ = 120.00000000000001)]
     @test triple[1].α ≈ 21.78678929826181 atol=1e-5
 end
+
+@testset "get_trojan_triples_for_a_number" begin
+	triple = T.get_trojan_triples_for_a_number(8)
+	@test length(triple) == 4
+	@test typeof(triple) == Vector{Any}
+	@test triple == [(a = 5.0, b = 7.0, c = 8.0), (a = 3.0, b = 7.0, c = 8.0), (a = 7.0, b = 8.0, c = 13.0), (a = 8.0, b = 13.0, c = 15.0)]
+	
+end
