@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module Triples
 export generate_triples
 function generate_triple(big_num::Int, small_num::Int)
@@ -8,6 +9,29 @@ function generate_triple(big_num::Int, small_num::Int)
     return _triple
     
 end
+=======
+include("module_Triples.jl")
+import .Trojan as T
 
 
-end # module Triples
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> 47460bb8447f90ce1d747d7262cd4cb6ddb11253
+
+
